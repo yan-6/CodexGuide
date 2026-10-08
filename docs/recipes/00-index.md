@@ -1,7 +1,10 @@
 ---
+pageClass: cg-directory
 description: "Codex 实战案例库，收录 PPT、Draw.io、Playwright、Obsidian、临床文献综述、Hatch Pet、安卓手机远程操控、飞书、Figma、Notion、CI 和远程排障案例。"
 permalink: /recipes/
 ---
+
+<SectionIntro section="recipes" />
 
 ::: tip 最后核对
 资料最后核对日期：2026-06-29。本页是实战案例索引，Codex 官方能力请以 [Codex 文档入口](https://developers.openai.com/codex/)、[Codex Skills](https://developers.openai.com/codex/skills)、[Codex Plugins](https://developers.openai.com/codex/plugins) 与 [Codex use cases](https://developers.openai.com/codex/use-cases/) 为准；第三方工具以各案例中的原仓库和官方页面为准。

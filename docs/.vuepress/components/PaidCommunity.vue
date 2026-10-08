@@ -109,6 +109,11 @@ const requestStatus = async (): Promise<CommunityStatus> => {
     cache: "no-store",
   });
   if (!response.ok) throw new Error(await responseError(response));
+  if (!response.headers.get("content-type")?.includes("application/json")) {
+    throw new Error(import.meta.env.DEV
+      ? "本地预览尚未连接支付服务，暂时无法查询入群资格。"
+      : "入群服务暂时不可用，请稍后重新检查。");
+  }
   return (await response.json()) as CommunityStatus;
 };
 
@@ -327,7 +332,11 @@ const retry = async (): Promise<void> => {
     await refreshStatus();
   } catch (error) {
     state.value = "error";
-    message.value = error instanceof Error ? error.message : "状态确认失败，请稍后重试。";
+    message.value = error instanceof SyntaxError
+      ? (import.meta.env.DEV
+        ? "本地预览尚未连接支付服务，暂时无法查询入群资格。"
+        : "入群服务暂时不可用，请稍后重新检查。")
+      : error instanceof Error ? error.message : "状态确认失败，请稍后重试。";
   }
 };
 
