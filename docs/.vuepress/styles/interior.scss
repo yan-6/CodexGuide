@@ -782,3 +782,21 @@ body:has(.theme-container):not(:has(.cg-home)) {
   .theme-container:not(:has(.cg-home)) #sidebar .vp-sidebar-header { transition: none; }
   .theme-container:not(:has(.cg-home)) #sidebar .vp-sidebar-link:hover { transform: none; }
 }
+
+// Independent sponsor cards; percentage minimum heights previously joined rows.
+.theme-container:not(:has(.cg-home)) #markdown-content .sponsor-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; align-items: stretch; margin-block: 28px 36px;
+  .sponsor-card { box-sizing: border-box; min-height: 0; height: auto; padding: 22px; border-radius: 18px 5px 18px 5px; background: var(--vp-c-bg); border: 1px solid var(--vp-c-border); box-shadow: 4px 5px 0 #0f766e14; transition: transform .2s, border-color .2s, box-shadow .2s; }
+  .sponsor-card:hover { transform: translateY(-4px); border-color: var(--vp-c-accent); box-shadow: 5px 9px 0 #0f766e19; }
+  .sponsor-card:focus-visible { outline: 2px solid var(--vp-c-accent); outline-offset: 4px; }
+  .sponsor-card img { display: block; box-sizing: border-box; height: 100px; max-height: 100px; padding: 5px; margin-bottom: 18px; border: 1px solid var(--vp-c-border); border-radius: 10px; }
+  .sponsor-card strong { font-size: 19px; }
+  .sponsor-card span { font-size: 14px; line-height: 1.8; }
+}
+@media (max-width: 600px) {
+  .theme-container:not(:has(.cg-home)) #markdown-content .sponsor-grid { grid-template-columns: 1fr; gap: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-container:not(:has(.cg-home)) #markdown-content .sponsor-grid .sponsor-card { transition: none; }
+  .theme-container:not(:has(.cg-home)) #markdown-content .sponsor-grid .sponsor-card:hover { transform: none; }
+}
