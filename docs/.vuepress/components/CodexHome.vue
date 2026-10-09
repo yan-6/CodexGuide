@@ -521,6 +521,7 @@ onUnmounted(() => {
             <p class="cg-community-note">支付宝支付 · 付款后当前浏览器自动保存入群资格</p>
           </div>
           <aside class="cg-community-reader">
+            <span class="cg-reader-seal" aria-hidden="true">↗</span>
             <p class="cg-eyebrow">适合这些读者</p>
             <h3>你已经开始使用 Codex，并希望把它真正融入工作</h3>
             <ul><li>手上有具体问题或项目</li><li>愿意分享过程和有效经验</li><li>希望获得长期、稳定的中文交流环境</li></ul>

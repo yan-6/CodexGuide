@@ -2152,3 +2152,42 @@ body:has(.theme-container) .slimsearch-record-matches.active {
 @media (max-width: 700px) {
   .cg-home .cg-community #cg-community-title > span:first-child { text-wrap: balance; }
 }
+
+// A paper invitation, with a stamped corner and numbered reader checklist.
+.cg-home .cg-community .cg-community-reader {
+  position: relative; isolation: isolate; padding: 38px 34px 30px; border: 1px solid #466b4c66;
+  border-radius: 3px 32px 3px 3px; background: #f4f3df;
+  box-shadow: 6px 7px 0 #97bb82, 11px 12px 0 #49764a33, 0 22px 38px -25px #164a3b66;
+  transform: rotate(2deg); transform-origin: 50% 90%;
+  &::before { content: ''; position: absolute; inset: 11px; border: 1px dashed #75956955; border-radius: 0 22px 0 0; pointer-events: none; z-index: -1; }
+  &::after { content: ''; position: absolute; top: -11px; left: 30px; width: 82px; height: 23px; background: #81a87288; transform: rotate(-6deg); border-inline: 1px dashed #f4f3df; }
+  .cg-eyebrow { display: inline-block; color: #f4f3df; background: #155346; padding: 7px 11px; margin-bottom: 8px; transform: rotate(-2deg); }
+  h3 { max-width: 340px; margin-top: 20px; font-size: 25px; letter-spacing: -.025em; }
+  ul { list-style: none; padding: 0; counter-reset: reader; margin-block: 26px; }
+  li { counter-increment: reader; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; padding-block: 14px; border-top: 1px solid #69876433; margin: 0; font-size: 15px; line-height: 1.7; }
+  li + li { margin: 0; }
+  li::before { content: '0' counter(reader); font-family: monospace; font-size: 12px; color: #648465; padding-top: 3px; }
+  > a { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #69876455; padding-top: 20px; }
+  > a span { display: grid; place-items: center; width: 34px; height: 34px; margin: 0; border-radius: 50%; background: #155346; color: #f4f3df; transition: transform .25s; }
+  > a:hover span { transform: rotate(45deg); }
+  .cg-reader-seal { position: absolute; top: -23px; right: 24px; display: grid; place-items: center; width: 62px; height: 62px; border: 1px solid #155346; border-radius: 50%; background: #cdefa8; color: #155346; font-size: 40px; transform: rotate(12deg); box-shadow: inset 0 0 0 5px #cdefa8, inset 0 0 0 6px #155346; }
+}
+// Scroll-driven choreography reuses the existing scene progress and cleanup.
+.cg-home.cg-motion .cg-community {
+  --invitation-title: clamp(0, calc(var(--community-progress) * 2.5), 1);
+  --invitation-copy: clamp(0, calc(var(--community-progress) * 2.5 - .4), 1);
+  --invitation-card: clamp(0, calc(var(--community-progress) * 2.5 - .8), 1);
+  .cg-community-inner { transform: none; }
+  #cg-community-title { clip-path: inset(0 0 calc((1 - var(--invitation-title)) * 100%) 0); transform: translateY(calc((1 - var(--invitation-title)) * 35px)); }
+  .cg-community-copy { opacity: var(--invitation-copy); transform: translateY(calc((1 - var(--invitation-copy)) * 45px)); }
+  .cg-community-reader { opacity: var(--invitation-card); transform: translateY(calc((1 - var(--invitation-card)) * 75px)) rotate(calc(2deg + (1 - var(--invitation-card)) * 9deg)); }
+}
+@media (max-width: 700px) {
+  .cg-home .cg-community .cg-community-reader { margin: 25px 5px 10px; padding: 30px 24px 26px; transform: rotate(1deg); }
+  .cg-home .cg-community .cg-community-reader h3 { font-size: 22px; }
+  .cg-home .cg-community .cg-community-reader .cg-reader-seal { width: 52px; height: 52px; font-size: 32px; right: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cg-home .cg-community #cg-community-title, .cg-home .cg-community .cg-community-copy, .cg-home .cg-community .cg-community-reader { clip-path: none !important; opacity: 1 !important; transform: none !important; }
+  .cg-home .cg-community .cg-community-reader > a span { transition: none; }
+}
