@@ -747,7 +747,7 @@ body:has(.theme-container):not(:has(.cg-home)) {
   }
 }
 
-// Chapter navigation: expandable headings and a numbered reading path.
+// Chapter navigation: expandable headings and clear article links.
 .theme-container:not(:has(.cg-home)) #sidebar {
   padding-top: 20px; scrollbar-color: #88a68b transparent; overscroll-behavior: contain;
   > .vp-sidebar-links { padding-inline: 16px; }
@@ -764,17 +764,16 @@ body:has(.theme-container):not(:has(.cg-home)) {
     &:focus-visible { outline: 2px solid var(--vp-c-accent); outline-offset: 3px; }
     &.active { border-color: color-mix(in srgb, var(--vp-c-accent) 40%, var(--vp-c-border)); }
   }
-  .vp-sidebar-group > .vp-sidebar-links { border: 0; padding: 0; margin: 0; counter-reset: chapter; }
-  .vp-sidebar-group > .vp-sidebar-links > li { counter-increment: chapter; margin: 4px 0; }
+  .vp-sidebar-group > .vp-sidebar-links { border: 0; padding: 0; margin: 0; }
+  .vp-sidebar-group > .vp-sidebar-links > li { margin: 4px 0; }
   .vp-sidebar-link {
     position: relative; display: flex; align-items: baseline; gap: 10px; padding: 11px 12px;
     margin: 0; border: 1px solid transparent; border-radius: 8px; font-size: 14px; line-height: 1.65;
     color: var(--vp-c-text-mute); transition: background .18s, color .18s, transform .18s;
-    &::before { content: counter(chapter, decimal-leading-zero); font: 10px ui-monospace, monospace; line-height: 2; opacity: .65; flex: 0 0 18px; }
+    &::before { content: none; }
     &:hover { background: var(--vp-c-bg); color: var(--vp-c-accent); transform: translateX(3px); }
     &:focus-visible { outline: 2px solid var(--vp-c-accent); outline-offset: 1px; }
     &.active { background: #155447; color: #eff6df; border: 1px solid #155447; box-shadow: 3px 3px 0 #8dad7866; font-weight: 650; }
-    &.active::before { opacity: 1; color: #c4e6a4; }
   }
 }
 @media (prefers-reduced-motion: reduce) {
