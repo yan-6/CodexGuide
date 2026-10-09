@@ -26,10 +26,6 @@ onMounted(() => {
   }
 });
 onBeforeUnmount(() => clearTimeout(showcaseTimer));
-function toggleShowcase() {
-  clearTimeout(showcaseTimer);
-  showcaseOpen.value = !showcaseOpen.value;
-}
 
 type PageState =
   | "awaiting"
@@ -420,9 +416,6 @@ onBeforeUnmount(() => {
             >
             <figcaption>智能体每日群聊精华</figcaption>
           </figure>
-          <button class="community-showcase-toggle" type="button" :aria-expanded="showcaseOpen" aria-controls="community-showcase" @click="toggleShowcase">
-            {{ showcaseOpen ? '合上展示' : '展开看看' }} <span aria-hidden="true">{{ showcaseOpen ? '↙' : '↗' }}</span>
-          </button>
         </div>
       </div>
     </section>
@@ -434,7 +427,8 @@ onBeforeUnmount(() => {
     >
       <div class="paid-community-price">
         <div>
-          <span id="community-checkout-title">一次付费</span>
+          <span v-if="!props.direct" class="community-pass-label">COMMUNITY PASS</span>
+          <span id="community-checkout-title">{{ props.direct ? "一次付费" : "你的入群通行证" }}</span>
           <small>入群资格长期有效</small>
         </div>
         <strong><small>¥</small>9.9</strong>
