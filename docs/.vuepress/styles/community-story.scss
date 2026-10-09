@@ -470,7 +470,7 @@
   .theme-container:has(.paid-community-shell:not(.is-direct)) .paid-community-price {
     padding: 30px 22px; gap: 12px;
     .community-pass-prefix { font-size: 18px; }
-    .community-pass-headline { font-size: 48px; }
+    .community-pass-headline { font-size: 38px; }
     strong { font-size: 90px; }
     strong small { font-size: 22px; top: 12px; }
   }
@@ -479,7 +479,7 @@
   .theme-container:has(.paid-community-shell:not(.is-direct)) .paid-community-price {
     grid-template-columns: 1fr; padding: 28px 24px 23px; gap: 14px;
     .community-pass-prefix { font-size: 21px; }
-    .community-pass-headline { font-size: clamp(56px, 12vw, 72px); }
+    .community-pass-headline { font-size: clamp(44px, 11vw, 64px); }
     strong { font-size: 82px; }
   }
 }
