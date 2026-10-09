@@ -815,3 +815,10 @@ body:has(.theme-container):not(:has(.cg-home)) {
     #sidebar { padding-inline-start: 0; }
   }
 }
+
+// Center the reading column independently of the compact left navigation.
+@media (min-width: 1280px) {
+  .theme-container:not(:has(.cg-home)):not(:has(.paid-community-shell)):not(.no-sidebar) .vp-page {
+    padding-inline: max(calc(var(--sidebar-width) + 2rem), calc((100vw - var(--content-width)) / 2 - 2.5rem));
+  }
+}
