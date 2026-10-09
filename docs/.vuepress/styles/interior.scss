@@ -800,3 +800,21 @@ body:has(.theme-container):not(:has(.cg-home)) {
   .theme-container:not(:has(.cg-home)) #markdown-content .sponsor-grid .sponsor-card { transition: none; }
   .theme-container:not(:has(.cg-home)) #markdown-content .sponsor-grid .sponsor-card:hover { transform: none; }
 }
+
+// Keep the chapter scrollbar clearly visible, including on overlay-scrollbar systems.
+.theme-container:not(:has(.cg-home)) #sidebar {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+  scrollbar-width: auto;
+  scrollbar-color: #477c63 #dce7d5;
+  &::-webkit-scrollbar { width: 10px; }
+  &::-webkit-scrollbar-track { background: #dce7d5; border-left: 1px solid #c1d3bd; }
+  &::-webkit-scrollbar-thumb { background: #477c63; border: 2px solid #dce7d5; border-radius: 8px; min-height: 48px; }
+  &::-webkit-scrollbar-thumb:hover { background: #175447; }
+}
+[data-theme="dark"] .theme-container:not(:has(.cg-home)) #sidebar {
+  scrollbar-color: #8db99b #1d4035;
+  &::-webkit-scrollbar-track { background: #1d4035; border-color: #345447; }
+  &::-webkit-scrollbar-thumb { background: #8db99b; border-color: #1d4035; }
+  &::-webkit-scrollbar-thumb:hover { background: #b8d9a7; }
+}
