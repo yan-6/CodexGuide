@@ -442,3 +442,16 @@
     .paid-community-checkout-action { grid-column: 1; grid-row: 3; border: 0; border-top: 2px dashed #9bb877; border-radius: 0 0 28px 28px; padding: 28px 24px 32px; }
   }
 }
+
+// A continuous white rim follows the portrait cards' rounded corners.
+.theme-container:has(.paid-community-shell:not(.is-direct)) .paid-community-visual .paid-community-phone {
+  box-sizing: border-box;
+  border: 5px solid #fff;
+  img { border-radius: 23px; }
+}
+@media (max-width: 760px) {
+  .theme-container:has(.paid-community-shell:not(.is-direct)) .paid-community-visual .paid-community-phone {
+    border-width: 3px;
+    img { border-radius: 17px; }
+  }
+}
