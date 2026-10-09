@@ -247,12 +247,12 @@ onUnmounted(() => {
                 ><svg viewBox="0 0 200 56">
                   <path d="M70 48H52V8H118V17M63 19H101M63 28H91M63 37H85" />
                   <path
-                    d="M107 22a18 18 0 1 1-9 22M105 15l2 9 9-2"
+                    d="M105 34a18 18 0 1 0 18-18"
                     stroke-width="2.5"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />
-                  <path d="m118 34 5 5 10-11" stroke-width="2" /></svg></span
+                  <path d="M123 23V34L132 39" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /><circle cx="123" cy="34" r="1.5" /></svg></span
               ><span
                 ><small>ALWAYS FRESH</small><strong>持续更新的内容</strong
                 ><em>与社区一起成长</em></span
@@ -500,33 +500,32 @@ onUnmounted(() => {
       aria-labelledby="cg-community-title"
     >
       <div class="cg-community-inner">
-        <p class="cg-eyebrow">A COMMUNITY OF BUILDERS</p>
+        <p class="cg-eyebrow">付费交流群</p>
         <h2 id="cg-community-title">
-          <span>你的下一个作品，</span
-          ><span
-            >在这里<span class="cg-community-highlight"
-              >一起做出来<svg viewBox="0 0 500 24" aria-hidden="true">
-                <path d="M4 14Q220 1 494 9M60 22Q260 9 466 18" /></svg></span
-            >。</span
-          >
+          <span>和认真使用 Codex 的人</span><span class="cg-community-highlight">一起进步<svg viewBox="0 0 500 24" aria-hidden="true"><path d="M4 14Q220 1 494 9M60 22Q260 9 466 18" /></svg></span>
         </h2>
-        <p class="cg-community-intro">
-          带着问题来，带着作品走。交流真实任务、分享实战经验，让每一次动手都有回应。
-        </p>
-        <div class="cg-community-bottom">
-          <div>
-            <RouteLink
-              class="cg-button cg-button-mint"
-              to="/community/join.html"
-              >了解付费交流群 <span aria-hidden="true">↗</span></RouteLink
-            >
-            <p class="cg-community-note">¥9.9 一次付费 · 入群资格长期有效</p>
+        <div class="cg-community-details">
+          <div class="cg-community-copy">
+            <p class="cg-community-intro">当教程无法覆盖你的真实场景，可以在群里交流配置、工作流、Skills、Plugins、自动化和项目实战。智能体每天汇总各群精华，加入任一群也能了解整个 Codex 社区当天的重点。<br />9.9 元一次付费，入群资格长期有效。</p>
+            <div class="cg-community-capacity"><strong>已有 5 个 Codex 交流群满员</strong><span>新成员将加入当前开放群，并持续收到整个社区的每日精华。</span></div>
+            <ul class="cg-community-perks">
+              <li>围绕真实问题交流，减少泛泛讨论</li>
+              <li>智能体每日汇总多个群的核心话题</li>
+              <li>持续获取实战案例与重要更新</li>
+              <li>认识同样在长期使用 Codex 的伙伴</li>
+            </ul>
+            <div class="cg-community-actions">
+              <RouteLink class="cg-button cg-button-mint" to="/community/join.html">¥9.9 了解并加入 <span aria-hidden="true">↗</span></RouteLink>
+              <RouteLink class="cg-button cg-community-secondary" to="/community/roadmap.html">参与社区共建</RouteLink>
+            </div>
+            <p class="cg-community-note">支付宝支付 · 付款后当前浏览器自动保存入群资格</p>
           </div>
-          <div class="cg-community-values">
-            <span>真实问题<small>一起交流解决</small></span
-            ><span>每日精华<small>汇总社区经验</small></span
-            ><span>共同成长<small>分享实战成果</small></span>
-          </div>
+          <aside class="cg-community-reader">
+            <p class="cg-eyebrow">适合这些读者</p>
+            <h3>你已经开始使用 Codex，并希望把它真正融入工作</h3>
+            <ul><li>手上有具体问题或项目</li><li>愿意分享过程和有效经验</li><li>希望获得长期、稳定的中文交流环境</li></ul>
+            <RouteLink to="/community/join.html">查看完整介绍 <span aria-hidden="true">↗</span></RouteLink>
+          </aside>
         </div>
         <div class="cg-wordmark" aria-hidden="true">
           <div class="cg-warp-type">
