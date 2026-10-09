@@ -16,6 +16,21 @@ import {
   redirectToCommunityOrigin,
 } from "../community-runtime.js";
 
+const showcaseOpen = ref(false);
+let showcaseTimer: ReturnType<typeof setTimeout> | undefined;
+onMounted(() => {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    showcaseOpen.value = true;
+  } else {
+    showcaseTimer = setTimeout(() => { showcaseOpen.value = true; }, 450);
+  }
+});
+onBeforeUnmount(() => clearTimeout(showcaseTimer));
+function toggleShowcase() {
+  clearTimeout(showcaseTimer);
+  showcaseOpen.value = !showcaseOpen.value;
+}
+
 type PageState =
   | "awaiting"
   | "checking"
@@ -366,23 +381,25 @@ onBeforeUnmount(() => {
     <section v-if="!props.direct" class="paid-community-top">
       <div class="paid-community-top-inner">
         <div class="paid-community-hero">
-          <span class="paid-community-kicker">CodexGuide 目前已经有 6 个高质量交流群</span>
-          <h1>把真实项目带进群里，<br>把可执行的方法带回去</h1>
+          <span class="paid-community-kicker"><span aria-hidden="true">●</span> CODEXGUIDE / 一起动手的社区</span>
+          <div class="community-members-note">6 个高质量交流群 <span aria-hidden="true">↗</span></div>
+          <h1 class="community-editorial-title"><span>带着<span class="community-outline">真实项目</span>来，</span><span>带着<span class="community-title-highlight">可执行的方法</span>走。</span></h1>
           <p>和正在使用 Codex 的创作者、开发者与效率实践者，交流配置、任务设计、Skills、Plugins、自动化与排障经验。</p>
 
           <div class="paid-community-hero-features" aria-label="社群核心价值">
             <div>
               <span class="paid-community-feature-icon"><ChatBubbleLeftRightIcon aria-hidden="true" /></span>
-              <strong>真实问题讨论</strong>
+              <div><strong>真实问题，一起拆解</strong><small>带上上下文，交流具体做法</small></div>
             </div>
             <div>
               <span class="paid-community-feature-icon"><ClipboardDocumentCheckIcon aria-hidden="true" /></span>
-              <strong>智能体每日群聊精华</strong>
+              <div><strong>每日精华，随时回看</strong><small>智能体整理，找到值得复用的经验</small></div>
             </div>
           </div>
         </div>
 
-        <div class="paid-community-visual" aria-label="真实群聊与每日精华展示">
+        <div id="community-showcase" class="paid-community-visual" :class="{ 'is-expanded': showcaseOpen }" aria-label="真实群聊与每日精华展示">
+          <span class="community-showcase-label" aria-hidden="true">OPEN THE CONVERSATION ↙</span>
           <figure class="paid-community-phone is-discussion">
             <img
               src="/images/community-codex-troubleshooting-discussion.jpg"
@@ -403,6 +420,9 @@ onBeforeUnmount(() => {
             >
             <figcaption>智能体每日群聊精华</figcaption>
           </figure>
+          <button class="community-showcase-toggle" type="button" :aria-expanded="showcaseOpen" aria-controls="community-showcase" @click="toggleShowcase">
+            {{ showcaseOpen ? '合上展示' : '展开看看' }} <span aria-hidden="true">{{ showcaseOpen ? '↙' : '↗' }}</span>
+          </button>
         </div>
       </div>
     </section>

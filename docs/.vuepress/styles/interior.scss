@@ -638,3 +638,69 @@ body:has(.theme-container):not(:has(.cg-home)) {
 }
 .theme-container:has(.paid-community-shell:not(.is-direct)) .paid-community-shell,
 .theme-container:has(.paid-community-shell:not(.is-direct)) .paid-community-shell * { box-sizing: border-box; }
+
+// An editorial invitation and two folding conversation cards.
+.theme-container:has(.paid-community-shell:not(.is-direct)) {
+  .paid-community-top-inner { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 48px; padding-block: 75px; }
+  .paid-community-kicker { display: flex; align-items: center; gap: 10px; font: 11px ui-monospace, monospace; letter-spacing: .12em; color: #d4edbc; }
+  .community-members-note { display: inline-flex; gap: 25px; padding: 8px 0; border-bottom: 1px solid #d4edbc66; margin-top: 20px; font-size: 13px; color: #d0e7c9; }
+  .paid-community-hero .community-editorial-title {
+    margin: 28px 0 24px;
+    font-size: clamp(32px, 3.05vw, 51px);
+    line-height: 1.65;
+    text-wrap: initial;
+    letter-spacing: -.045em;
+    > span { display: block; white-space: nowrap; }
+    .community-outline { color: transparent; -webkit-text-stroke: 1px #f4f4df; }
+    .community-title-highlight { display: inline-block; padding: 0 8px; line-height: 1.35; background: #cdecaf; color: #0b5547; transform: rotate(-2deg); box-shadow: 4px 5px 0 #06463b66; }
+  }
+  .paid-community-hero > p { max-width: 520px; font-size: 15px; line-height: 1.9; color: #cae2d5; }
+  .paid-community-hero-features { display: grid; grid-template-columns: 1fr; gap: 19px; margin-top: 30px; padding-top: 25px; border-top: 1px solid #c4ddc442; }
+  .paid-community-hero-features > div { gap: 15px; }
+  .paid-community-feature-icon { background: transparent; color: #cdecaf; border: 1px solid #b6d5b480; border-radius: 50%; box-shadow: none; width: 44px; height: 44px; }
+  .paid-community-hero-features strong { font-size: 16px; color: #eef4df; }
+  .paid-community-hero-features small { display: block; margin-top: 5px; font-size: 12px; color: #b7d7c6; }
+  .paid-community-visual { perspective: 1400px; min-height: 580px; isolation: isolate; }
+  .community-showcase-label { position: absolute; top: 0; right: 0; font: 11px ui-monospace, monospace; letter-spacing: .1em; color: #cce4bb; transform: rotate(4deg); }
+  .paid-community-visual .paid-community-phone {
+    left: 50%; right: auto; top: 48%; width: 53%; max-width: 315px; height: 455px;
+    transform-origin: 50% 80%;
+    transition: transform 1s cubic-bezier(.22,.8,.22,1), box-shadow 1s;
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+  .paid-community-visual .is-discussion { transform: translate(-50%, -50%) rotate(-3deg) rotateY(5deg) scale(.92); }
+  .paid-community-visual .is-digest { transform: translate(-43%, -52%) rotate(3deg) rotateY(-5deg) scale(.9); }
+  .paid-community-visual.is-expanded .is-discussion { transform: translate(-94%, -50%) rotate(-8deg) rotateY(8deg); }
+  .paid-community-visual.is-expanded .is-digest { transform: translate(-5%, -47%) rotate(7deg) rotateY(-10deg); }
+  .community-showcase-toggle {
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 26px; align-items: center; padding: 12px 19px;
+    border: 1px solid #b6d5b466; border-radius: 28px; background: #0a574c; color: #e8f4d7;
+    font: inherit; font-size: 13px; cursor: pointer;
+    span { font-size: 21px; }
+    &:hover { background: #093f37; }
+    &:focus-visible { outline: 3px solid #cdecaf; outline-offset: 4px; }
+  }
+}
+@media (max-width: 1100px) {
+  .theme-container:has(.paid-community-shell:not(.is-direct)) {
+    .paid-community-top-inner { gap: 30px; padding-inline: 30px; }
+    .paid-community-hero .community-editorial-title { font-size: 3.2vw; }
+    .paid-community-visual { min-height: 480px; }
+    .paid-community-visual .paid-community-phone { height: 350px; }
+  }
+}
+@media (max-width: 760px) {
+  .theme-container:has(.paid-community-shell:not(.is-direct)) {
+    .paid-community-top-inner { grid-template-columns: 1fr; padding: 40px 24px; gap: 45px; }
+    .paid-community-hero .community-editorial-title { font-size: clamp(25px, 6.3vw, 44px); }
+    .paid-community-hero > p { font-size: 14px; }
+    .paid-community-visual { min-height: 440px; }
+    .paid-community-visual .paid-community-phone { height: 325px; width: 54%; }
+    .community-showcase-label { font-size: 9px; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-container:has(.paid-community-shell:not(.is-direct)) .paid-community-visual .paid-community-phone { transition: none; }
+}
