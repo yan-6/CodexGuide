@@ -337,3 +337,28 @@
     .community-mark-letter:nth-child(5) { -webkit-text-stroke-width: 1px; }
   }
 }
+
+// Give the original screenshots enough room to read at desktop sizes.
+.theme-container:has(.paid-community-shell:not(.is-direct)) {
+  .paid-community-top-inner { max-width: 1620px; grid-template-columns: minmax(0, .9fr) minmax(0, 1.25fr); padding-inline: 55px; gap: 45px; }
+  .paid-community-visual { min-height: 550px; }
+  .paid-community-visual .paid-community-phone { width: 52%; max-width: 410px; }
+  .paid-community-visual.is-expanded .is-discussion { transform: translate(-99%, -50%) rotate(-3deg) rotateY(5deg); }
+  .paid-community-visual.is-expanded .is-digest { transform: translate(-1%, -45%) rotate(3deg) rotateY(-5deg); }
+  .paid-community-hero .community-editorial-title { font-size: clamp(36px, 3.45vw, 57px); }
+}
+@media (max-width: 1100px) {
+  .theme-container:has(.paid-community-shell:not(.is-direct)) {
+    .paid-community-top-inner { padding-inline: 30px; gap: 30px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+    .paid-community-visual { min-height: 400px; }
+    .paid-community-hero .community-editorial-title { font-size: 3.4vw; }
+  }
+}
+@media (max-width: 760px) {
+  .theme-container:has(.paid-community-shell:not(.is-direct)) {
+    .paid-community-top-inner { grid-template-columns: 1fr; padding-inline: 25px; gap: 45px; }
+    .paid-community-visual { min-height: 340px; }
+    .paid-community-visual .paid-community-phone { width: 53%; max-width: none; }
+    .paid-community-hero .community-editorial-title { font-size: clamp(25px, 7vw, 48px); }
+  }
+}
