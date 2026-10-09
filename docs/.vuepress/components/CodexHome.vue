@@ -516,7 +516,7 @@ onUnmounted(() => {
             </ul>
             <div class="cg-community-actions">
               <RouteLink class="cg-button cg-button-mint" to="/community/join.html">¥9.9 了解并加入 <span aria-hidden="true">↗</span></RouteLink>
-              <RouteLink class="cg-button cg-community-secondary" to="/community/roadmap.html">参与社区共建</RouteLink>
+              <RouteLink class="cg-button cg-community-secondary" to="/community/roadmap.html">参与社区共建 <span aria-hidden="true">↗</span></RouteLink>
             </div>
             <p class="cg-community-note">支付宝支付 · 付款后当前浏览器自动保存入群资格</p>
           </div>
