@@ -10,7 +10,7 @@ description: "Codex 入口地图，比较 CLI、桌面 App、Cloud、IDE、ChatG
 
 Codex 是一个具备多个产品形态的Agent。涵盖桌面端APP，CLI，Web云端，IDE。
 
-![Codex 使用入口地图](https://cdn.canghecode.com/codexguide/docs/.vuepress/public/images/codex-surfaces.svg?v=20260611)
+![Codex 使用入口地图](../images/codex-entry-map-v2.png)
 
 ## 入口对照表
 
