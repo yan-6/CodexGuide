@@ -16,7 +16,37 @@ import {
   redirectToCommunityOrigin,
 } from "../community-runtime.js";
 
+const communityShell = ref<HTMLElement | null>(null);
 const showcaseOpen = ref(false);
+let disposeMotion: (() => void) | undefined;
+onMounted(() => {
+  const shell = communityShell.value;
+  if (!shell || props.direct) return;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const scenes = Array.from(shell.querySelectorAll<HTMLElement>("[data-community-scene]"));
+  let frame = 0;
+  const update = () => {
+    frame = 0;
+    const height = window.innerHeight;
+    const values = scenes.map((scene) => {
+      const rect = scene.getBoundingClientRect();
+      return reduced.matches ? 1 : Math.max(0, Math.min(1, (height * .95 - rect.top) / (height * .7)));
+    });
+    scenes.forEach((scene, index) => scene.style.setProperty("--scene", String(values[index])));
+  };
+  const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+  window.addEventListener("scroll", schedule, { passive: true });
+  window.addEventListener("resize", schedule);
+  reduced.addEventListener("change", schedule);
+  update();
+  disposeMotion = () => {
+    cancelAnimationFrame(frame);
+    window.removeEventListener("scroll", schedule);
+    window.removeEventListener("resize", schedule);
+    reduced.removeEventListener("change", schedule);
+  };
+});
+onBeforeUnmount(() => disposeMotion?.());
 let showcaseTimer: ReturnType<typeof setTimeout> | undefined;
 onMounted(() => {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -373,7 +403,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <main class="paid-community-shell" :class="{ 'is-direct': props.direct }">
+  <main ref="communityShell" class="paid-community-shell" :class="{ 'is-direct': props.direct }">
     <section v-if="!props.direct" class="paid-community-top">
       <div class="paid-community-top-inner">
         <div class="paid-community-hero">
@@ -395,6 +425,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div id="community-showcase" class="paid-community-visual" :class="{ 'is-expanded': showcaseOpen }" aria-label="真实群聊与每日精华展示">
+          <span class="community-book-spine" aria-hidden="true"></span>
           <span class="community-showcase-label" aria-hidden="true">OPEN THE CONVERSATION ↙</span>
           <figure class="paid-community-phone is-discussion">
             <img
@@ -420,8 +451,148 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
+    <template v-if="!props.direct">
+      <div class="community-story-ribbon" aria-hidden="true"><div><span>真实问题，一起拆解 ✦ 每日精华，随时回看 ✦ </span><span>真实问题，一起拆解 ✦ 每日精华，随时回看 ✦ </span></div></div>
+      <section data-community-scene class="paid-community-entry" aria-labelledby="community-entry-title">
+        <div class="paid-community-entry-heading">
+          <span aria-hidden="true"></span>
+          <h2 id="community-entry-title">加入后，你会进入这样的交流</h2>
+          <span aria-hidden="true"></span>
+        </div>
+
+        <div class="paid-community-entry-grid">
+          <article>
+            <span class="paid-community-entry-icon"><ChatBubbleLeftRightIcon aria-hidden="true" /></span>
+            <div>
+              <strong>带着上下文提问</strong>
+              <p>把项目背景、目标与报错贴进群里，获得有针对性的分析与可落地的解决思路。</p>
+            </div>
+          </article>
+          <article>
+            <span class="paid-community-entry-icon"><ClipboardDocumentCheckIcon aria-hidden="true" /></span>
+            <div>
+              <strong>参考验证过的实践</strong>
+              <p>来自真实项目的配置、任务设计、Skills、Plugins 与自动化方案，可直接复用与改造。</p>
+            </div>
+          </article>
+          <article>
+            <span class="paid-community-entry-icon"><CalendarDaysIcon aria-hidden="true" /></span>
+            <div>
+              <strong>每天掌握群聊重点</strong>
+              <p>每日群聊精华整理，提炼关键词与结论，帮你快速掌握最新方法与排障思路。</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section data-community-scene class="paid-community-section paid-community-proof" aria-labelledby="community-proof-title">
+        <div class="paid-community-section-heading">
+          <span>真实交流现场</span>
+          <h2 id="community-proof-title"><span>遇到具体问题，</span><span>群里有人一起拆解</span></h2>
+          <p>从额度重置、模型选择到异常反馈，大家会补充自己的使用情况，交流已经验证过的处理思路。</p>
+        </div>
+
+        <div class="paid-community-proof-grid">
+          <figure>
+            <img
+              src="/images/community-codex-troubleshooting-discussion.jpg"
+              alt="Codex 用户交流群内关于额度重置、模型选择和异常反馈的真实讨论"
+              width="1280"
+              height="1280"
+              loading="lazy"
+              decoding="async"
+            >
+            <figcaption>
+              <strong>具体问题，及时交流</strong>
+              <span>群友会分享自己的额度状态、模型选择和实际反馈，帮助彼此缩小排查范围。</span>
+            </figcaption>
+          </figure>
+
+          <figure>
+            <img
+              src="/images/community-codex-active-groups.jpg"
+              alt="多个 Codex 用户交流群持续讨论额度重置等使用问题"
+              width="1280"
+              height="1280"
+              loading="lazy"
+              decoding="async"
+            >
+            <figcaption>
+              <strong>多个群持续沉淀经验</strong>
+              <span>交流群覆盖不同批次的长期用户，常见问题会得到多角度的经验补充。</span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="paid-community-proof-footer">
+          <p>真实群聊截图仅用于展示交流主题，具体回复速度和讨论结果会随成员在线情况变化。</p>
+          <a href="#community-checkout">带着你的问题加入交流</a>
+        </div>
+      </section>
+
+      <section data-community-scene class="paid-community-section paid-community-digest" aria-labelledby="community-digest-title">
+        <div class="paid-community-digest-copy">
+          <span class="paid-community-digest-kicker">智能体每日群聊精华</span>
+          <h2 id="community-digest-title">加入任一群，都能看见整个 Codex 社区当天在聊什么</h2>
+          <p>智能体会汇总各交流群当天的消息量、参与人数和核心话题，并把精华每天推送到群里。即使错过实时消息，也能快速掌握值得跟进的问题、经验和行业动态。</p>
+
+          <ul class="paid-community-digest-points">
+            <li>
+              <strong>跨群汇总</strong>
+              <span>聚合多个交流群的讨论重点，不受单个群的信息范围限制。</span>
+            </li>
+            <li>
+              <strong>每日送达</strong>
+              <span>当天热点由智能体自动整理，打开群聊就能查看。</span>
+            </li>
+            <li>
+              <strong>快速补课</strong>
+              <span>消息量、参与人数和核心话题清晰呈现，几分钟掌握社区动态。</span>
+            </li>
+          </ul>
+
+          <a class="paid-community-digest-action" href="#community-checkout">¥9.9 加入，开始接收每日精华</a>
+          <small>每日精华由智能体根据群内实际讨论自动生成，内容会随当天话题变化。</small>
+        </div>
+
+        <div class="paid-community-digest-gallery">
+          <figure>
+            <img
+              src="/images/community-codex-daily-digest-highlights.jpg"
+              alt="Codex 社区智能体生成的每日各群消息分布与群聊精华"
+              width="1280"
+              height="1280"
+              loading="lazy"
+              decoding="async"
+            >
+            <figcaption>
+              <strong>每天提炼核心话题</strong>
+              <span>各群讨论重点、活跃情况和可复用经验集中呈现。</span>
+            </figcaption>
+          </figure>
+
+          <figure>
+            <img
+              src="/images/community-codex-daily-digest-groups.jpg"
+              alt="Codex 社区每日群聊精华总结，包含各群消息数与核心话题"
+              width="1280"
+              height="1280"
+              loading="lazy"
+              decoding="async"
+            >
+            <figcaption>
+              <strong>多个群的动态一份掌握</strong>
+              <span>加入任一群，都能持续了解整个社区当天的讨论脉络。</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+    </template>
+
     <section
       id="community-checkout"
+      data-community-scene
       class="paid-community-checkout"
       aria-labelledby="community-checkout-title"
     >
@@ -544,145 +715,10 @@ onBeforeUnmount(() => {
     </section>
 
     <template v-if="!props.direct">
-      <section class="paid-community-entry" aria-labelledby="community-entry-title">
-        <div class="paid-community-entry-heading">
-          <span aria-hidden="true"></span>
-          <h2 id="community-entry-title">加入后，你会进入这样的交流</h2>
-          <span aria-hidden="true"></span>
-        </div>
-
-        <div class="paid-community-entry-grid">
-          <article>
-            <span class="paid-community-entry-icon"><ChatBubbleLeftRightIcon aria-hidden="true" /></span>
-            <div>
-              <strong>带着上下文提问</strong>
-              <p>把项目背景、目标与报错贴进群里，获得有针对性的分析与可落地的解决思路。</p>
-            </div>
-          </article>
-          <article>
-            <span class="paid-community-entry-icon"><ClipboardDocumentCheckIcon aria-hidden="true" /></span>
-            <div>
-              <strong>参考验证过的实践</strong>
-              <p>来自真实项目的配置、任务设计、Skills、Plugins 与自动化方案，可直接复用与改造。</p>
-            </div>
-          </article>
-          <article>
-            <span class="paid-community-entry-icon"><CalendarDaysIcon aria-hidden="true" /></span>
-            <div>
-              <strong>每天掌握群聊重点</strong>
-              <p>每日群聊精华整理，提炼关键词与结论，帮你快速掌握最新方法与排障思路。</p>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="paid-community-section paid-community-proof" aria-labelledby="community-proof-title">
-        <div class="paid-community-section-heading">
-          <span>真实交流现场</span>
-          <h2 id="community-proof-title">遇到具体问题，群里有人一起拆解</h2>
-          <p>从额度重置、模型选择到异常反馈，大家会补充自己的使用情况，交流已经验证过的处理思路。</p>
-        </div>
-
-        <div class="paid-community-proof-grid">
-          <figure>
-            <img
-              src="/images/community-codex-troubleshooting-discussion.jpg"
-              alt="Codex 用户交流群内关于额度重置、模型选择和异常反馈的真实讨论"
-              width="1280"
-              height="1280"
-              loading="lazy"
-              decoding="async"
-            >
-            <figcaption>
-              <strong>具体问题，及时交流</strong>
-              <span>群友会分享自己的额度状态、模型选择和实际反馈，帮助彼此缩小排查范围。</span>
-            </figcaption>
-          </figure>
-
-          <figure>
-            <img
-              src="/images/community-codex-active-groups.jpg"
-              alt="多个 Codex 用户交流群持续讨论额度重置等使用问题"
-              width="1280"
-              height="1280"
-              loading="lazy"
-              decoding="async"
-            >
-            <figcaption>
-              <strong>多个群持续沉淀经验</strong>
-              <span>交流群覆盖不同批次的长期用户，常见问题会得到多角度的经验补充。</span>
-            </figcaption>
-          </figure>
-        </div>
-
-        <div class="paid-community-proof-footer">
-          <p>真实群聊截图仅用于展示交流主题，具体回复速度和讨论结果会随成员在线情况变化。</p>
-          <a href="#community-checkout">带着你的问题加入交流</a>
-        </div>
-      </section>
-
-      <section class="paid-community-section paid-community-digest" aria-labelledby="community-digest-title">
-        <div class="paid-community-digest-copy">
-          <span class="paid-community-digest-kicker">智能体每日群聊精华</span>
-          <h2 id="community-digest-title">加入任一群，都能看见整个 Codex 社区当天在聊什么</h2>
-          <p>智能体会汇总各交流群当天的消息量、参与人数和核心话题，并把精华每天推送到群里。即使错过实时消息，也能快速掌握值得跟进的问题、经验和行业动态。</p>
-
-          <ul class="paid-community-digest-points">
-            <li>
-              <strong>跨群汇总</strong>
-              <span>聚合多个交流群的讨论重点，不受单个群的信息范围限制。</span>
-            </li>
-            <li>
-              <strong>每日送达</strong>
-              <span>当天热点由智能体自动整理，打开群聊就能查看。</span>
-            </li>
-            <li>
-              <strong>快速补课</strong>
-              <span>消息量、参与人数和核心话题清晰呈现，几分钟掌握社区动态。</span>
-            </li>
-          </ul>
-
-          <a class="paid-community-digest-action" href="#community-checkout">¥9.9 加入，开始接收每日精华</a>
-          <small>每日精华由智能体根据群内实际讨论自动生成，内容会随当天话题变化。</small>
-        </div>
-
-        <div class="paid-community-digest-gallery">
-          <figure>
-            <img
-              src="/images/community-codex-daily-digest-highlights.jpg"
-              alt="Codex 社区智能体生成的每日各群消息分布与群聊精华"
-              width="1280"
-              height="1280"
-              loading="lazy"
-              decoding="async"
-            >
-            <figcaption>
-              <strong>每天提炼核心话题</strong>
-              <span>各群讨论重点、活跃情况和可复用经验集中呈现。</span>
-            </figcaption>
-          </figure>
-
-          <figure>
-            <img
-              src="/images/community-codex-daily-digest-groups.jpg"
-              alt="Codex 社区每日群聊精华总结，包含各群消息数与核心话题"
-              width="1280"
-              height="1280"
-              loading="lazy"
-              decoding="async"
-            >
-            <figcaption>
-              <strong>多个群的动态一份掌握</strong>
-              <span>加入任一群，都能持续了解整个社区当天的讨论脉络。</span>
-            </figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section class="paid-community-section paid-community-fit" aria-labelledby="community-fit-title">
+      <section data-community-scene class="paid-community-section paid-community-fit" aria-labelledby="community-fit-title">
         <div class="paid-community-section-heading">
           <span>先判断是否适合</span>
-          <h2 id="community-fit-title">有真实场景的人，会获得更多价值</h2>
+          <h2 id="community-fit-title"><span>有真实场景的人，</span><span>会获得更多价值</span></h2>
         </div>
         <div class="paid-community-fit-grid">
           <article class="is-recommended">
@@ -728,6 +764,7 @@ onBeforeUnmount(() => {
           </ul>
         </details>
       </section>
+      <div class="community-endmark" aria-hidden="true">CODEXGUIDE<span>↗</span></div>
     </template>
   </main>
 </template>

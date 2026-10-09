@@ -7,6 +7,7 @@ import "./styles/home.scss";
 import "./styles/creative-scenes.scss";
 import "./styles/workbench-motion.scss";
 import "./styles/interior.scss";
+import "./styles/community-story.scss";
 
 import PaidCommunity from "./components/PaidCommunity.vue";
 import PaidCommunityAdmin from "./components/PaidCommunityAdmin.vue";
