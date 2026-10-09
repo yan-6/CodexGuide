@@ -460,7 +460,7 @@ onBeforeUnmount(() => {
       <div class="paid-community-price">
         <div>
           <span v-if="!props.direct" class="community-pass-label">COMMUNITY PASS</span>
-          <span id="community-checkout-title">{{ props.direct ? "一次付费" : "你的入群通行证" }}</span>
+          <span id="community-checkout-title"><template v-if="props.direct">一次付费</template><template v-else><span class="community-pass-prefix">你的入群</span><span class="community-pass-headline">通行证</span></template></span>
           <small>入群资格长期有效</small>
         </div>
         <strong><small>¥</small>9.9</strong>
