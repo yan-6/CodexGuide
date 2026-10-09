@@ -259,11 +259,12 @@ onUnmounted(() => {
               ><b aria-hidden="true">↗</b></RouteLink
             >
           </div>
+          <SiteVisitCounter />
         </div>
         <HeroWorkbench />
       </div>
       <div class="cg-hero-foot">
-        <span>LEARN. BUILD. SHARE.</span><SiteVisitCounter /><a href="#learning"
+        <span>LEARN. BUILD. SHARE.</span><a href="#learning"
           >探索你的下一步 <span aria-hidden="true">↓</span></a
         >
       </div>

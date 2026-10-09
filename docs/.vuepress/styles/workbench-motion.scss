@@ -2266,3 +2266,27 @@ body:has(.theme-container) {
   body:has(.theme-container) .slimsearch-modal::before { padding: 18px 16px; font-size: 12px; }
   body:has(.theme-container) .slimsearch-result-wrapper.empty { min-height: 180px; }
 }
+
+// A compact live readout beneath the hero's discovery cards.
+.cg-home .cg-hero-copy .site-visit-counter {
+  justify-content: flex-start;
+  gap: 8px 14px;
+  margin: 20px 0 0;
+  min-height: 30px;
+  color: #c0ded2;
+  font-size: 13px !important;
+  line-height: 1.5;
+  .site-visit-live {
+    padding: 4px 10px;
+    border: 1px solid #d8efb78c;
+    background: #d8efb714;
+    color: #e0f2bf;
+    font-size: 12px;
+  }
+  .site-visit-item { white-space: nowrap; }
+  .site-visit-item strong { color: #f5f7df; font-size: 15px; }
+  .site-visit-item + .site-visit-item::before { color: #b5d0b7; }
+}
+@media (max-width: 380px) {
+  .cg-home .cg-hero-copy .site-visit-counter { gap: 6px 9px; font-size: 12px !important; }
+}
