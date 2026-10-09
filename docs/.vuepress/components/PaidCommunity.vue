@@ -451,6 +451,130 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
+    <section
+      id="community-checkout"
+      data-community-scene
+      class="paid-community-checkout"
+      aria-labelledby="community-checkout-title"
+    >
+      <div class="paid-community-price">
+        <div>
+          <span v-if="!props.direct" class="community-pass-label">COMMUNITY PASS</span>
+          <span id="community-checkout-title">{{ props.direct ? "一次付费" : "你的入群通行证" }}</span>
+          <small>入群资格长期有效</small>
+        </div>
+        <strong><small>¥</small>9.9</strong>
+      </div>
+
+      <div v-if="!props.direct" class="paid-community-payment-notes" aria-label="支付与服务说明">
+        <div>
+          <ShieldCheckIcon aria-hidden="true" />
+          <span>微信 / 支付宝安全收款</span>
+        </div>
+        <div>
+          <CheckCircleIcon aria-hidden="true" />
+          <span>付款后自动保存资格</span>
+        </div>
+        <div>
+          <LifebuoyIcon aria-hidden="true" />
+          <span>异常可联系公众号“苍何”</span>
+        </div>
+      </div>
+
+      <div class="paid-community-checkout-action">
+        <div
+          v-if="state !== 'eligible' && (alipayEnabled || wechatEnabled)"
+          class="paid-community-methods"
+          aria-label="选择支付方式"
+        >
+          <button
+            type="button"
+            :class="{ 'is-active': selectedProvider === 'wechat' }"
+            :disabled="!wechatEnabled || busy"
+            @click="selectProvider('wechat')"
+          >微信支付</button>
+          <button
+            type="button"
+            :class="{ 'is-active': selectedProvider === 'alipay' }"
+            :disabled="!alipayEnabled || busy"
+            @click="selectProvider('alipay')"
+          >支付宝</button>
+        </div>
+
+        <div class="paid-community-status" role="status" aria-live="polite">
+          <span class="paid-community-status-dot" :class="`is-${state}`" aria-hidden="true"></span>
+          <p>{{ message }}</p>
+        </div>
+
+        <div
+          v-if="paymentEnabled && state !== 'eligible' && state !== 'awaiting'"
+          class="paid-community-return-tip"
+        >
+          <QrCodeIcon aria-hidden="true" />
+          <p>
+            <strong>{{ selectedProvider === 'wechat' ? '请在电脑展示付款码' : '支付完成后，请记得返回本页面' }}</strong>
+            <span>{{ selectedProvider === 'wechat' ? '使用手机微信扫一扫，系统确认到账后自动显示入群二维码。' : '系统确认到账后，入群二维码会自动显示在这里。' }}</span>
+          </p>
+        </div>
+
+        <template v-if="state === 'eligible'">
+          <div class="paid-community-group-qr">
+            <img v-if="qrUrl" :src="qrUrl" alt="已付款用户可见的 CodexGuide 微信群二维码">
+          </div>
+          <p class="paid-community-hint">请勿转发群二维码。若二维码已失效或群已满，请联系公众号“苍何”。</p>
+        </template>
+
+        <template v-else-if="state === 'awaiting'">
+          <div class="paid-community-payment-qr">
+            <strong>微信付款码</strong>
+            <img v-if="paymentQrDataUrl" :src="paymentQrDataUrl" alt="CodexGuide 交流群微信付款二维码">
+            <span>剩余 {{ remainingLabel }}</span>
+            <small>请使用手机微信“扫一扫”，不要截屏或从相册识别。</small>
+          </div>
+          <button class="paid-community-retry" type="button" @click="selectProvider('alipay')">
+            改用支付宝
+          </button>
+        </template>
+
+        <template v-else-if="state === 'mobile'">
+          <div class="paid-community-mobile-tip">
+            <strong>微信扫码支付需要两台设备</strong>
+            <span>请在电脑打开当前页面，再使用手机微信扫一扫。手机端可直接改用支付宝。</span>
+          </div>
+          <button
+            v-if="alipayEnabled"
+            class="paid-community-pay"
+            type="button"
+            @click="selectProvider('alipay')"
+          >改用支付宝　¥9.9</button>
+        </template>
+
+        <template v-else>
+          <label v-if="!props.direct && paymentEnabled" class="paid-community-consent">
+            <input v-model="accepted" type="checkbox">
+            <span>我已阅读并了解本页下方的<a href="#service-boundary">社群交流与服务边界</a></span>
+          </label>
+          <button
+            v-if="state === 'ready' || state === 'paying'"
+            class="paid-community-pay"
+            type="button"
+            :disabled="!accepted || !providerEnabled || busy"
+            @click="startPayment"
+          >
+            {{ busy ? "正在发起支付…" : `${selectedProvider === "wechat" ? "微信支付" : "支付宝支付"}　¥9.9` }}
+          </button>
+          <button
+            v-if="state === 'error' || state === 'unavailable'"
+            class="paid-community-retry"
+            type="button"
+            @click="retry"
+          >
+            重新检查
+          </button>
+        </template>
+      </div>
+    </section>
+
     <template v-if="!props.direct">
       <div class="community-story-ribbon" aria-hidden="true"><div><span>真实问题，一起拆解 ✦ 每日精华，随时回看 ✦ </span><span>真实问题，一起拆解 ✦ 每日精华，随时回看 ✦ </span></div></div>
       <section data-community-scene class="paid-community-entry" aria-labelledby="community-entry-title">
@@ -590,130 +714,6 @@ onBeforeUnmount(() => {
 
     </template>
 
-    <section
-      id="community-checkout"
-      data-community-scene
-      class="paid-community-checkout"
-      aria-labelledby="community-checkout-title"
-    >
-      <div class="paid-community-price">
-        <div>
-          <span v-if="!props.direct" class="community-pass-label">COMMUNITY PASS</span>
-          <span id="community-checkout-title">{{ props.direct ? "一次付费" : "你的入群通行证" }}</span>
-          <small>入群资格长期有效</small>
-        </div>
-        <strong><small>¥</small>9.9</strong>
-      </div>
-
-      <div v-if="!props.direct" class="paid-community-payment-notes" aria-label="支付与服务说明">
-        <div>
-          <ShieldCheckIcon aria-hidden="true" />
-          <span>微信 / 支付宝安全收款</span>
-        </div>
-        <div>
-          <CheckCircleIcon aria-hidden="true" />
-          <span>付款后自动保存资格</span>
-        </div>
-        <div>
-          <LifebuoyIcon aria-hidden="true" />
-          <span>异常可联系公众号“苍何”</span>
-        </div>
-      </div>
-
-      <div class="paid-community-checkout-action">
-        <div
-          v-if="state !== 'eligible' && (alipayEnabled || wechatEnabled)"
-          class="paid-community-methods"
-          aria-label="选择支付方式"
-        >
-          <button
-            type="button"
-            :class="{ 'is-active': selectedProvider === 'wechat' }"
-            :disabled="!wechatEnabled || busy"
-            @click="selectProvider('wechat')"
-          >微信支付</button>
-          <button
-            type="button"
-            :class="{ 'is-active': selectedProvider === 'alipay' }"
-            :disabled="!alipayEnabled || busy"
-            @click="selectProvider('alipay')"
-          >支付宝</button>
-        </div>
-
-        <div class="paid-community-status" role="status" aria-live="polite">
-          <span class="paid-community-status-dot" :class="`is-${state}`" aria-hidden="true"></span>
-          <p>{{ message }}</p>
-        </div>
-
-        <div
-          v-if="paymentEnabled && state !== 'eligible' && state !== 'awaiting'"
-          class="paid-community-return-tip"
-        >
-          <QrCodeIcon aria-hidden="true" />
-          <p>
-            <strong>{{ selectedProvider === 'wechat' ? '请在电脑展示付款码' : '支付完成后，请记得返回本页面' }}</strong>
-            <span>{{ selectedProvider === 'wechat' ? '使用手机微信扫一扫，系统确认到账后自动显示入群二维码。' : '系统确认到账后，入群二维码会自动显示在这里。' }}</span>
-          </p>
-        </div>
-
-        <template v-if="state === 'eligible'">
-          <div class="paid-community-group-qr">
-            <img v-if="qrUrl" :src="qrUrl" alt="已付款用户可见的 CodexGuide 微信群二维码">
-          </div>
-          <p class="paid-community-hint">请勿转发群二维码。若二维码已失效或群已满，请联系公众号“苍何”。</p>
-        </template>
-
-        <template v-else-if="state === 'awaiting'">
-          <div class="paid-community-payment-qr">
-            <strong>微信付款码</strong>
-            <img v-if="paymentQrDataUrl" :src="paymentQrDataUrl" alt="CodexGuide 交流群微信付款二维码">
-            <span>剩余 {{ remainingLabel }}</span>
-            <small>请使用手机微信“扫一扫”，不要截屏或从相册识别。</small>
-          </div>
-          <button class="paid-community-retry" type="button" @click="selectProvider('alipay')">
-            改用支付宝
-          </button>
-        </template>
-
-        <template v-else-if="state === 'mobile'">
-          <div class="paid-community-mobile-tip">
-            <strong>微信扫码支付需要两台设备</strong>
-            <span>请在电脑打开当前页面，再使用手机微信扫一扫。手机端可直接改用支付宝。</span>
-          </div>
-          <button
-            v-if="alipayEnabled"
-            class="paid-community-pay"
-            type="button"
-            @click="selectProvider('alipay')"
-          >改用支付宝　¥9.9</button>
-        </template>
-
-        <template v-else>
-          <label v-if="!props.direct && paymentEnabled" class="paid-community-consent">
-            <input v-model="accepted" type="checkbox">
-            <span>我已阅读并了解本页下方的<a href="#service-boundary">社群交流与服务边界</a></span>
-          </label>
-          <button
-            v-if="state === 'ready' || state === 'paying'"
-            class="paid-community-pay"
-            type="button"
-            :disabled="!accepted || !providerEnabled || busy"
-            @click="startPayment"
-          >
-            {{ busy ? "正在发起支付…" : `${selectedProvider === "wechat" ? "微信支付" : "支付宝支付"}　¥9.9` }}
-          </button>
-          <button
-            v-if="state === 'error' || state === 'unavailable'"
-            class="paid-community-retry"
-            type="button"
-            @click="retry"
-          >
-            重新检查
-          </button>
-        </template>
-      </div>
-    </section>
-
     <template v-if="!props.direct">
       <section data-community-scene class="paid-community-section paid-community-fit" aria-labelledby="community-fit-title">
         <div class="paid-community-section-heading">
@@ -764,7 +764,7 @@ onBeforeUnmount(() => {
           </ul>
         </details>
       </section>
-      <div class="community-endmark" aria-hidden="true">CODEXGUIDE<span>↗</span></div>
+      <div class="community-endmark" aria-hidden="true"><span v-for="(letter, index) in 'CODEXGUIDE'" :key="index" class="community-mark-letter">{{ letter }}</span><span class="community-mark-arrow">↗</span></div>
     </template>
   </main>
 </template>
